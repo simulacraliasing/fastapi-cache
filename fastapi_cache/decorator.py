@@ -85,6 +85,7 @@ def _uncacheable(request: Optional[Request]) -> bool:
 
 
 def cache(
+    force_cache: bool = False,
     expire: Optional[int] = None,
     coder: Optional[Type[Coder]] = None,
     key_builder: Optional[KeyBuilder] = None,
@@ -152,7 +153,7 @@ def cache(
             request: Optional[Request] = copy_kwargs.pop(request_param.name, None)  # type: ignore[assignment]
             response: Optional[Response] = copy_kwargs.pop(response_param.name, None)  # type: ignore[assignment]
 
-            if _uncacheable(request):
+            if _uncacheable(request) and not force_cache:
                 return await ensure_async_func(*args, **kwargs)
 
             prefix = FastAPICache.get_prefix()
