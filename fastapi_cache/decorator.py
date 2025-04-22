@@ -79,13 +79,10 @@ def _uncacheable(request: Optional[Request]) -> bool:
         return True
     if request is None:
         return False
-    if request.method != "GET":
-        return True
     return request.headers.get("Cache-Control") == "no-store"
 
 
 def cache(
-    force_cache: bool = False,
     expire: Optional[int] = None,
     coder: Optional[Type[Coder]] = None,
     key_builder: Optional[KeyBuilder] = None,
@@ -153,7 +150,7 @@ def cache(
             request: Optional[Request] = copy_kwargs.pop(request_param.name, None)  # type: ignore[assignment]
             response: Optional[Response] = copy_kwargs.pop(response_param.name, None)  # type: ignore[assignment]
 
-            if _uncacheable(request) and not force_cache:
+            if _uncacheable(request):
                 return await ensure_async_func(*args, **kwargs)
 
             prefix = FastAPICache.get_prefix()
