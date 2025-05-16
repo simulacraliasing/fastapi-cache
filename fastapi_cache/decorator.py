@@ -174,6 +174,7 @@ def cache(
 
             try:
                 ttl, cached = await backend.get_with_ttl(cache_key)
+                logger.debug(f"Retrieved cache key '{cache_key}' from backend")
             except Exception:
                 logger.warning(
                     f"Error retrieving cache key '{cache_key}' from backend:",
@@ -187,6 +188,7 @@ def cache(
 
                 try:
                     await backend.set(cache_key, to_cache, expire)
+                    logger.debug(f"Set cache key '{cache_key}' in backend")
                 except Exception:
                     logger.warning(
                         f"Error setting cache key '{cache_key}' in backend:",
